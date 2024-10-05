@@ -104,6 +104,8 @@
       // target3.innerHTML = 100 + "%";
       startFade();
 
+      console.log(JSON.stringify({ id: _userId, nickname: _nickname }));
+
       unityInstance.SendMessage("Login", "SendData", JSON.stringify({ id: _userId, nickname: _nickname }));
 
     }).catch((err) => {
