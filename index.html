@@ -104,6 +104,8 @@
       // target3.innerHTML = 100 + "%";
       startFade();
 
+      unityInstance.SendMessage("Login", "SendData", JSON.stringify({ id: _userId, nickname: _nickname }));
+
     }).catch((err) => {
       console.log(err);
     });
@@ -150,25 +152,6 @@
       else if (event.data.startsWith("n_")) {
         _userId = event.data.slice(2);
       }
-
-      if (_userId != "" && _nickname != "") {
-        var data = db
-          .collection("UserData")
-          .doc(_nickname)
-          .set({ id: _userId })
-          .then(() => {
-
-            console.log("Document successfully written!");
-          })
-          .catch((error) => {
-            console.log("Error writing document: ", error);
-          });
-      }
-
-      // if(event.data === "login")
-      // {
-      //   unityInstance.SendMessage("ServerManager", "Login",JSON.stringify({id:_userId,nickname:_nickname}));
-      // }
 
     });
 
