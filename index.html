@@ -150,6 +150,7 @@
     window.addEventListener('message', function (event) {
       // 메시지를 보낸 origin(출처)을 확인하여 신뢰할 수 있는 출처인지 확인합니다.
       if (event.origin !== window.location.origin) {
+        window.alert('Message from an unknown origin is ignored.');
         return;
       }
 
