@@ -104,14 +104,17 @@
       // target3.innerHTML = 100 + "%";
       startFade();
 
-      console.log("AAA");
-      console.log(JSON.stringify({ id: _userId, nickname: _nickname }));
-
-      unityInstance.SendMessage("Login", "SendData", JSON.stringify({ id: _userId, nickname: _nickname }));
 
     }).catch((err) => {
       console.log(err);
     });
+
+    setInterval(() => {
+      if (window.outerHeight - window.innerHeight > 100 || window.outerWidth - window.innerWidth > 100) {
+        alert('개발자 도구가 열렸습니다.');
+        window.location.reload();
+      }
+    }, 1000);
 
 
     function startFade() {
@@ -121,6 +124,7 @@
           clearInterval(intervalId);
           brightness = 0;
           loader.style.display = "none";
+          unityInstance.SendMessage("Hello", "SendName", JSON.stringify({ p: parity, nickname: name }));
         }
         loader.style.filter = `brightness(${brightness})`;
       }, 10); // 0.1초마다 실행
@@ -140,22 +144,13 @@
     });
 
 
-
-    let _userId = "";
-    let _nickname = "";
+    let parity = "";
+    let name = "";
 
     // 부모 창에서 메시지 수신을 처리하는 이벤트 리스너
     window.addEventListener('message', function (event) {
-
-      console.log(event.data);
-
-      if (event.data.startsWith("n_")) {
-        _nickname = event.data.slice(2);
-      }
-      else if (event.data.startsWith("i_")) {
-        _userId = event.data.slice(2);
-      }
-
+      if (event.data.startsWith("i_")) { parity = event.data.slice(2); }
+      if (event.data.startsWith("n_")) { name = event.data.slice(2); }
     });
 
   </script>
