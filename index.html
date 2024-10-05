@@ -109,13 +109,6 @@
       console.log(err);
     });
 
-    setInterval(() => {
-      if (window.outerHeight - window.innerHeight > 100 || window.outerWidth - window.innerWidth > 100) {
-        alert('개발자 도구가 열렸습니다.');
-        window.location.reload();
-      }
-    }, 1000);
-
 
     function startFade() {
       intervalId = setInterval(() => {
