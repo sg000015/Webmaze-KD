@@ -117,6 +117,7 @@
           clearInterval(intervalId);
           brightness = 0;
           loader.style.display = "none";
+
           unityInstance.SendMessage("Hello", "SendName", JSON.stringify({ p: parity, nickname: name }));
         }
         loader.style.filter = `brightness(${brightness})`;
