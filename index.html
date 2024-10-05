@@ -141,22 +141,33 @@
       }
     });
 
-  </script>
 
 
+    const _userId = "";
+    const _nickname = "";
 
-  <script>
     // 부모 창에서 메시지 수신을 처리하는 이벤트 리스너
     window.addEventListener('message', function (event) {
-      // 메시지를 보낸 origin(출처)을 확인하여 신뢰할 수 있는 출처인지 확인합니다.
-      if (event.origin !== window.location.origin) {
-        window.alert('Message from an unknown origin is ignored.');
-        return;
-      }
 
       // 받은 메시지를 화면에 표시
       window.alert('Message from Parent:', event.data);
+
+      if (event.data.startsWith("nick_")) {
+        nickname = event.data.slice(5); // "nick_" 이후의 문자열만 저장
+      }
+      // event.data가 "id_"로 시작하면 id 변수에 저장
+      else if (event.data.startsWith("id_")) {
+        id = event.data.slice(3); // "id_" 이후의 문자열만 저장
+        console.log("ID saved:", id);
+      }
+
+      // if(event.data === "login")
+      // {
+      //   unityInstance.SendMessage("ServerManager", "Login",JSON.stringify({id:_userId,nickname:_nickname}));
+      // }
+
     });
+
   </script>
 
 
