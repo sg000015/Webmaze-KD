@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <title>Mini-World</title>
+  <link rel="stylesheet" type="text/css" href="./index.css">
+
+</head>
+
+<body class="mode-street" ondragstart="return false" onselectstart="return false">
+
+  <div id="unity-container"><canvas id="unity-canvas"></canvas></div>
+
+  <div id="loader">
+    <!-- <span class="loading">LOADING... -->
+    <span class="loadingText"></span>
+    <!-- </span> -->
+    <div class="progress">
+      <div class="fill"></div>
+      <div class="fillAmount"></div>
+    </div>
+  </div>
+
+  <script>
+    (function (exec) {
+      RegExp.prototype.exec = function () {
+        arguments[0] = arguments[0].replace('Mozilla/5.0 (Macintosh; Intel Mac OS X 11', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10');
+        return exec.apply(this, arguments);
+      };
+    })(RegExp.prototype.exec);
+  </script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/buzzfeed/libgif-js@master/libgif.js"></script>
+  <script src="Build/Webmaze.loader.js"></script>
+  <script>
+
+
+    //하단 전역변수들 Unity-Plugins-WebGL에서도 참조되기에 바뀌지 않도록 주의
+    var unityInstance;
+    var loadingPercentage = document.getElementById("loadingPercentage");
+    var loader = document.getElementById("loader");
+    const target = window.document.querySelector('.loadingText');
+    const target2 = window.document.querySelector('.progress .fill');
+    const target3 = window.document.querySelector('.progress .fillAmount');
+
+    let intervalId;
+    let brightness = 1;
+
+    target.innerHTML = "";
+    target2.style.width = "0%";
+    // target3.innerHTML = "0%";
+
+
+    //Query로 전달할 데이터
+    var data = "";
+    var loaded = false;
+
+    var time = 0;
+    var onPrograss = function (progress) {
+      if (progress < 0.9) {
+        setInterval(function () {
+          if (loaded) { return; }
+          if (time < 40) {
+            time++;
+            // target.innerHTML = "로딩중입니다.";
+            target2.style.width = time + "%";
+            // target3.innerHTML = time + "%";
+          }
+          else if (time < 80) {
+            time++;
+            // target.innerHTML = "로딩중입니다2.";
+            target2.style.width = time + "%";
+            // target3.innerHTML = time + "%";
+          }
+          else {
+            // target.innerHTML = "불러오는 중입니다.";
+          }
+        }, 500);
+      }
+    }
+
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "Build/Webmaze.data.unityweb",
+      frameworkUrl: "Build/Webmaze.framework.js.unityweb",
+      codeUrl: "Build/Webmaze.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "OG-SOFT",
+      productName: "KillingDream",
+      productVersion: "0.0.1",
+      // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+      // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+    }, onPrograss).then((result) => {
+
+      loaded = true;
+      unityInstance = result;
+
+      //TODO : 추후에는 영상으로 로딩대체 및 입장버튼 만들기
+
+      // target.innerHTML = "로딩완료";
+      target2.style.width = 100 + "%";
+      // target3.innerHTML = 100 + "%";
+      startFade();
+
+      //testLogin
+      // var data = {id:"95@gmail.com",pw:"95" };
+      // console.log(JSON.stringify(data));
+      // unityInstance.SendMessage("ServerManager", "TestLogin",JSON.stringify(data));
+
+    }).catch((err) => {
+      console.log(err);
+    });
+
+
+    function startFade() {
+      intervalId = setInterval(() => {
+        brightness -= 0.01;
+        if (brightness <= 0) {
+          clearInterval(intervalId);
+          brightness = 0;
+          loader.style.display = "none";
+        }
+        loader.style.filter = `brightness(${brightness})`;
+      }, 10); // 0.1초마다 실행
+    }
+
+
+    //채팅 키입력 (InputField가 html부분에 포커싱댐)
+    window.addEventListener("keydown", function (event) {
+      if (event.keyCode === 13)  //Enter
+      {
+        unityInstance.SendMessage("ChattingController", "InputGetKeyDownOnHtml", 13);
+      }
+      else if (event.keyCode === 27) //Esc
+      {
+        unityInstance.SendMessage("ChattingController", "InputGetKeyDownOnHtml", 27);
+      }
+    });
+
+  </script>
+
+
+  <!--9버전이상부터 함수가 바뀜 → 확인못했음. -->
+
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-firestore.js"></script>
+
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAaLFVXrYBwuEEPATY9IktVaZ3Yr_wIEVM",
+      authDomain: "miniworld-596a4.firebaseapp.com",
+      projectId: "miniworld-596a4",
+      storageBucket: "miniworld-596a4.appspot.com",
+      messagingSenderId: "736457445186",
+      appId: "1:736457445186:web:a62a01a603404ab03d42db",
+      measurementId: "G-RBDMLJB6F6",
+      googleWebId: "736457445186-ob4mfm8h4scna77nhn94hlgfjs55sopr.apps.googleusercontent.com"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+
+    const db = firebase.firestore();
+
+  </script>
+
+</body>
+
+</html>
