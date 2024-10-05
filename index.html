@@ -149,18 +149,27 @@
     // 부모 창에서 메시지 수신을 처리하는 이벤트 리스너
     window.addEventListener('message', function (event) {
 
-      // 받은 메시지를 화면에 표시
-      // window.alert('Message from Parent:', event.data);
-
       console.log(event.data);
 
       if (event.data.startsWith("n_")) {
-        nickname = event.data.slice(2); // "nick_" 이후의 문자열만 저장
+        _nickname = event.data.slice(2);
       }
-      // event.data가 "id_"로 시작하면 id 변수에 저장
       else if (event.data.startsWith("n_")) {
-        id = event.data.slice(2); // "id_" 이후의 문자열만 저장
-        console.log("ID saved:", id);
+        _userId = event.data.slice(2);
+      }
+
+      if (_userId != "" && _nickname != "") {
+        var data = db
+          .collection("UserData")
+          .doc(_nickname)
+          .set({ id: _userId })
+          .then(() => {
+
+            console.log("Document successfully written!");
+          })
+          .catch((error) => {
+            console.log("Error writing document: ", error);
+          });
       }
 
       // if(event.data === "login")
