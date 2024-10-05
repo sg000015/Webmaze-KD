@@ -99,17 +99,10 @@
       loaded = true;
       unityInstance = result;
 
-      //TODO : 추후에는 영상으로 로딩대체 및 입장버튼 만들기
-
       // target.innerHTML = "로딩완료";
       target2.style.width = 100 + "%";
       // target3.innerHTML = 100 + "%";
       startFade();
-
-      //testLogin
-      // var data = {id:"95@gmail.com",pw:"95" };
-      // console.log(JSON.stringify(data));
-      // unityInstance.SendMessage("ServerManager", "TestLogin",JSON.stringify(data));
 
     }).catch((err) => {
       console.log(err);
